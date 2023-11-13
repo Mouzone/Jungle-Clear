@@ -1,4 +1,5 @@
 
+#each indice in each table represents how much resource is given at that camp's level
 camps = {
         "Gromp":{
             gold_table: [],
@@ -29,10 +30,12 @@ camps = {
             xp_table: []
         }
     }
-#each level requries 100 more xp i.e. lvl 2 is 280 xp, 1v1 3 takes 380 xp, but 660 cumulative
+
 class Champion():
     champion_xp = 0
     champion_gold = 0
+    champion_level = 1
+    xp_required = 280
 
     def get_champion_gold(self):
         return self.champion_gold
@@ -41,13 +44,19 @@ class Champion():
         return self.champion_xp
 
     def get_champion_level(self):
-        return (self.champion_xp-80)//100
+        return self.champion_level
+
+    def increment_champion_gold(self, increment):
+        champion_gold += increment
 
     def increment_exp(self, increment):
         champion_xp += incremenet
+        self.increment_level()
     
-    def increment_champion_gold(self, increment):
-        champion_gold += increment
+    def increment_level(self):
+        if champion_xp // xp_required == 1:
+            champion_level += 1
+            xp_required += 100
     
     def kill_camp(self, camp):
         self.increment_champion_gold(camp.get_camp_gold())
