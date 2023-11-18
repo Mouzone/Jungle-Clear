@@ -56,9 +56,9 @@ class Jungle():
     }
     def __init__(self):
     #increment all the xps by 15 or 12 depending on if it is large camp or small respectively
-        for camp in camps:
+        for camp in self.camps:
             if camp == "Krugs" or camp == "Raptors" or camp == "Wolves":
-                for creep in Jungle.camps[camp]:
+                for creep in self.camps[camp]:
                     if creep == "Big":
                         self.camps[camp][creep]['xp'] = [x + 15 for x in self.camps[camp][creep]['xp']]
                     else:
@@ -66,8 +66,7 @@ class Jungle():
             else:
                 self.camps[camp]['xp'] = [x + 15 for x in self.camps[camp]['xp']]
 
-    @staticmethod
-    def get_camp_resource(camp, resource):
+    def get_camp_resource(self, camp, resource):
         total = 0
         if camp == "Gromp":
             total = Jungle.camps["Gromp"][resource][0]
@@ -83,20 +82,19 @@ class Jungle():
             total = Jungle.camps["Krugs"]["Big"][resource][0] + Jungle.camps["Krugs"]["Medium"][resource][0] + 6 * Jungle.camps["Krugs"]["Small"][resource][0]
         else:
             total = Jungle.camps["Scuttle"][resource][0]
-        Jungle.level_up_camps(camp, resource)
+        self.level_up_camps(camp, resource)
         return total
 
-    @staticmethod
-    def level_up_camps(camp, resource):
+    def level_up_camps(self, camp, resource):
         if camp == "Krugs" or camp == "Raptors" or camp == "Wolves":
-            for creep in Jungle.camps[camp]:
+            for creep in self.camps[camp]:
                 if len(Jungle.camps[camp][creep][resource]) == 1:
                     return
-                Jungle.camps[camp][creep][resource] = Jungle.camps[camp][creep][resource][1:]
+                self.camps[camp][creep][resource] = self.camps[camp][creep][resource][1:]
         else:
             if len(Jungle.camps[camp][resource]) == 1:
                 return
-            Jungle.camps[camp][resource] = Jungle.camps[camp][resource][1:]
+            self.camps[camp][resource] = self.camps[camp][resource][1:]
 
 class Champion:
     champion_xp = 150
@@ -133,6 +131,8 @@ class Champion:
 
 def main():
     champion = Champion()
+    print(Jungle.camps)
+    
     #take input in form of string while string is not End
     #on end give xp and gold
     #else keep putting camps in
