@@ -23,8 +23,8 @@ class Jungle():
         },
         "Raptors":{
             "Big": {
-                "gold_table": [35],
-                "xp_table": [20, 20.5, 21.5, 24, 26, 29]
+                "gold": [35],
+                "xp": [20, 20.5, 21.5, 24, 26, 29]
             },
             "Small": {
                 "gold": [8],
@@ -55,46 +55,45 @@ class Jungle():
         }
     }
 
+    @staticmethod
     def get_camp_resource(camp, resource):
-        #creeps_clear is a list [0,2] means 0 big 2 small
-        #big is a boolean
-        #small is a number
-        #big and small is optional, if not specified kills whole camp
         total = 0
         if camp == "Gromp":
-            total = camps["Gromp"][resource][0]
+            total = Jungle.camps["Gromp"][resource][0]
         elif camp == "Blue":
-            total = camps["Blue"][resource][0]
+            total = Jungle.camps["Blue"][resource][0]
         elif camp == "Wolves":
-            total = camps["Wolves"]["Big"][resource][0] + 2 * camp["Wolves"]["Small"][resource][0]
+            total = Jungle.camps["Wolves"]["Big"][resource][0] + 2 * Jungle.camps["Wolves"]["Small"][resource][0]
         elif camp == "Raptors":
-            total = camps["Raptors"]["Big"][resource][0] + 5 * camp["Raptors"]["Small"][resource][0]
+            total = Jungle.camps["Raptors"]["Big"][resource][0] + 5 * Jungle.camps["Raptors"]["Small"][resource][0]
         elif camp == "Red":
-            total = camps["Red"][resource][0]
-        elif camp =="Krugs":
-            total = camps["Krugs"]["Big"][resource][0] + camps["Krugs"]["Medium"][resource][0] + 6 * camps["Krugs"]["Big"][resource][0]
+            total = Jungle.camps["Red"][resource][0]
+        elif camp == "Krugs":
+            total = Jungle.camps["Krugs"]["Big"][resource][0] + Jungle.camps["Krugs"]["Medium"][resource][0] + 6 * Jungle.camps["Krugs"]["Small"][resource][0]
         else:
-            total = camps["Scuttle"][resource][0]
-        level_up_camps(camp, resource)
-        return gold
-        #might need a special function for krugs, ancient krug on death spawns 4 minis, medium krug on death spawns 2 minis
+            total = Jungle.camps["Scuttle"][resource][0]
+        Jungle.level_up_camps(camp, resource)
+        return total
 
+    @staticmethod
     def level_up_camps(camp, resource):
         if camp == "Krugs" or camp == "Raptors" or camp == "Wolves":
-            for creep in camps[camp]:
-                if len(camps[camp][creep][resource]) == 1:
-                    return 
-                camps[camp][creep][resource] = camps[camp][creep][resource][1:]
+            for creep in Jungle.camps[camp]:
+                if len(Jungle.camps[camp][creep][resource]) == 1:
+                    return
+                Jungle.camps[camp][creep][resource] = Jungle.camps[camp][creep][resource][1:]
         else:
-            if len(camps[camp][resource]) == 1:
-                    return 
-            camps[camp][resource] = camps[camp][resource][1:]
+            if len(Jungle.camps[camp][resource]) == 1:
+                return
+            Jungle.camps[camp][resource] = Jungle.camps[camp][resource][1:]
 
-class Champion():
-    champion_xp = 150 #150xp for first camp kill
+class Champion:
+    champion_xp = 150
     champion_gold = 0
     champion_level = 1
     xp_required = 280
+
+    jungle = Jungle()
 
     def get_champion_gold(self):
         return self.champion_gold
@@ -106,23 +105,22 @@ class Champion():
         return self.champion_level
 
     def increment_champion_gold(self, increment):
-        champion_gold += increment
+        self.champion_gold += increment
 
     def increment_exp(self, increment):
-        champion_xp += incremenet
+        self.champion_xp += increment
         self.increment_level()
-    
+
     def increment_level(self):
-        if champion_xp // xp_required == 1:
-            champion_level += 1
-            xp_required += 100
-    
+        if self.champion_xp // self.xp_required == 1:
+            self.champion_level += 1
+            self.xp_required += 100
+
     def kill_camp(self, camp):
-        self.increment_champion_gold(camp.get_camp_resources(camp, "gold"))
-        self.increment_exp(camp.get_camp_resources(camp, "xp"))
+        self.increment_champion_gold(self.jungle.get_camp_resource(camp, "gold"))
+        self.increment_exp(self.jungle.get_camp_resource(camp, "xp"))
 
 def main():
-    jungle = Jungle()
     champion = Champion()
     #take input in form of string while string is not End
     #on end give xp and gold
@@ -133,9 +131,11 @@ def main():
         if user_input.lower() == "end":
             break
         
-        champion.kill_camp(camp)
+        champion.kill_camp(user_input)
     
     print(champion.get_champion_gold)
     print(champion.get_champion_level)
     print(champion.get_champion_xp)
 
+if __name__ == "__main__":
+    main()
