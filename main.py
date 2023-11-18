@@ -1,6 +1,7 @@
 
 #each indice in each table represents how much resource is given at that camp's level
-class Camp():
+#add 15xp for large camps, and 12 xp for small camps
+class Jungle():
     camps = {
         "Gromp":{
             "gold": [80],
@@ -65,9 +66,9 @@ class Camp():
         elif camp == "Blue":
             total = camps["Blue"][resource][0]
         elif camp == "Wolves":
-            total = camps["Wolves"]["Big"][resource][0] + 2*camp["Wolves"]["Small"][resource][0]
+            total = camps["Wolves"]["Big"][resource][0] + 2 * camp["Wolves"]["Small"][resource][0]
         elif camp == "Raptors":
-            total = camps["Raptors"]["Big"][resource][0] + 5*camp["Raptors"]["Small"][resource][0]
+            total = camps["Raptors"]["Big"][resource][0] + 5 * camp["Raptors"]["Small"][resource][0]
         elif camp == "Red":
             total = camps["Red"][resource][0]
         elif camp =="Krugs":
@@ -90,7 +91,7 @@ class Camp():
             camps[camp][resource] = camps[camp][resource][1:]
 
 class Champion():
-    champion_xp = 0
+    champion_xp = 150 #150xp for first camp kill
     champion_gold = 0
     champion_level = 1
     xp_required = 280
@@ -117,6 +118,24 @@ class Champion():
             xp_required += 100
     
     def kill_camp(self, camp):
-        self.increment_champion_gold(camp.get_camp_gold())
-        self.increment_exp(camp.get_camp_xp())
+        self.increment_champion_gold(camp.get_camp_resources(camp, "gold"))
+        self.increment_exp(camp.get_camp_resources(camp, "xp"))
+
+def main():
+    jungle = Jungle()
+    champion = Champion()
+    #take input in form of string while string is not End
+    #on end give xp and gold
+    #else keep putting camps in
+    while True:
+        user_input = input("Enter Camp (type 'end' to stop): ")
+        
+        if user_input.lower() == "end":
+            break
+        
+        champion.kill_camp(camp)
+    
+    print(champion.get_champion_gold)
+    print(champion.get_champion_level)
+    print(champion.get_champion_xp)
 
