@@ -54,6 +54,17 @@ class Jungle():
             "xp": [55, 57.75, 60.5, 63.25, 66, 68.75, 71.5, 74.25, 77, 82.5, 88, 93.5, 99, 104.5, 110, 115.5, 121]
         }
     }
+    def __init__(self):
+    #increment all the xps by 15 or 12 depending on if it is large camp or small respectively
+        for camp in camps:
+            if camp == "Krugs" or camp == "Raptors" or camp == "Wolves":
+                for creep in Jungle.camps[camp]:
+                    if creep == "Big":
+                        self.camps[camp][creep]['xp'] = [x + 15 for x in self.camps[camp][creep]['xp']]
+                    else:
+                        self.camps[camp][creep]['xp'] = [x + 12 for x in self.camps[camp][creep]['xp']]
+            else:
+                self.camps[camp]['xp'] = [x + 15 for x in self.camps[camp]['xp']]
 
     @staticmethod
     def get_camp_resource(camp, resource):
@@ -133,9 +144,9 @@ def main():
         
         champion.kill_camp(user_input)
     
-    print(champion.get_champion_gold)
-    print(champion.get_champion_level)
-    print(champion.get_champion_xp)
+    print(champion.get_champion_gold())
+    print(champion.get_champion_level())
+    print(champion.get_champion_xp())
 
 if __name__ == "__main__":
     main()
